@@ -12,8 +12,8 @@
       if ($_SERVER["REQUEST_METHOD"] == "POST") {
         // simple protection
         $usr =  htmlspecialchars(stripcslashes(trim($_POST['usr'])));
-        $pwd =  md5(htmlspecialchars(stripcslashes(trim($_POST['pwd']))));
-        $pwd2 =  md5(htmlspecialchars(stripcslashes(trim($_POST['pwd_conf']))));
+        $pwd =  htmlspecialchars(stripcslashes(trim(md5($_POST['pwd']))));
+        $pwd2 =  htmlspecialchars(stripcslashes(trim(md5($_POST['pwd_conf']))));
         $email = htmlspecialchars(stripcslashes(trim($_POST['email'])));
 
         if (!isTableExist($table_name, $conn)) {

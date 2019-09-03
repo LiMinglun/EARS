@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <script type="text/javascript">
+    function checkCookies() {
+      var usr = getCookie("userName");
+      var pwd = getCookie("password");
+      var data = "usr=" + usr + "&" + "pwd=" + pwd;
+      var url = 'php/login.php?type=cookieLogin';
+
+      var xhr = new XMLHttpRequest();
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+          if (xhr.responseText == 1) {
+            var welcomeLabel = document.getElementById("welcomeLabel");
+            welcomeLabel.innerHTML = "Welcome " + usr;
+          }
+          else {
+            window.location.href = "login.html";
+          }
+        }
+      }
+      xhr.open('post', url, true);
+      xhr.setRequestHeader('content-type','application/x-www-form-urlencoded');
+      xhr.send(data);
+    }
+    function openPost() {
+      window.location.href="newpost.html";
+    }
+
+    function getCookie(name) {
+      var name = escape(name);
+      var cookies = document.cookie;
+      var begin = cookies.indexOf(name+"=");
+      if (begin != -1) {
+        var start = begin + name.length + 1;
+        var end = cookies.indexOf(";", start);
+        if (end == -1) end = cookies.length;
+        var value = cookies.substring(start, end);
+        return value;
+      }
+      return "";
+    }
+
+    function deleteCookie(name) {
+      var name = escape(name);
+      var expiration = new Date(0);
+      document.cookie = name + "=" + ";expires=" + expiration.toUTCString() + ";path=/";
+    }
+
+    function logOut() {
+      deleteCookie("userName");
+      deleteCookie("password");
+      window.location.href = "login.html";
+    }
+  </script>
+</head>
+<body onload="checkCookies()">
+  <label id="welcomeLabel"></label>  <a href="#" onclick="logOut()">Sign out</a>
+  <br/><br/>
+  <button id="Post" onclick="openPost()">New Post</button>
+  <button id="MyList">My Posts</button>
+</body>
+</html>

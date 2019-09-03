@@ -21,15 +21,21 @@
     var SUCCESS = 1;
     var WRONG_PWD = 0;
     var WRONG_USR = 3;
-    var SERVER_URL = 'php/login.php';
+    var SERVER_URL = 'php/login.php?type=login';
 
     $(document).on('submit', '#signinForm', function() {
       event.preventDefault();
 
       var xhr = new XMLHttpRequest();
+      var username = document.getElementById('username').value;
+      var password = document.getElementById('password').value;
+      var data = "name="+username+"&pwd="+password;
+
       xhr.onreadystatechange = function() {
         if (xhr.readyState == 4 && xhr.status == 200) {
-          if (xhr.responseText == SUCCESS) {
+          if (xhr.responseText.startsWith(SUCCESS)) {
+            addCookie("userName", username, 30);
+            addCookie("password", xhr.responseText.substring(1), 30);
             window.location.href = "index.html";
           }
           else if (xhr.responseText == WRONG_PWD) {
@@ -40,9 +46,6 @@
           }
         }
       }
-      var username = document.getElementById('username').value;
-      var password = document.getElementById('password').value;
-      var data = "name="+username+"&pwd="+password;
       xhr.open('post', SERVER_URL, true);
       xhr.setRequestHeader('content-type','application/x-www-form-urlencoded');
       xhr.send(data);
@@ -71,4 +74,14 @@
     </form>
   </div>
 </body>
+<script type="text/javascript">
+  function addCookie(name, val, day) {
+    var name = escape(name);
+    var value = escape(val);
+    var expires = new Date();
+    expires.setDate(expires.getDate() + day);
+    var exp_int = expires.toUTCString();
+    document.cookie = name + "=" + value + '; expires=' + exp_int + '; path=/';
+  }
+</script>
 </html>
